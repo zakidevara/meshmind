@@ -1,0 +1,2797 @@
+{
+  "messages": [
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782325086.0186925",
+      "thread_ts": "1782325086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782325386.0186925",
+      "thread_ts": "1782325086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782328686.0186925",
+      "thread_ts": "1782325086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782328686.0186925",
+      "thread_ts": "1782328686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782328986.0186925",
+      "thread_ts": "1782328686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782332286.0186925",
+      "thread_ts": "1782328686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782332286.0186925",
+      "thread_ts": "1782332286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782332586.0186925",
+      "thread_ts": "1782332286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782335886.0186925",
+      "thread_ts": "1782332286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782335886.0186925",
+      "thread_ts": "1782335886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782336186.0186925",
+      "thread_ts": "1782335886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782339486.0186925",
+      "thread_ts": "1782335886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782339486.0186925",
+      "thread_ts": "1782339486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782339786.0186925",
+      "thread_ts": "1782339486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782340086.0186925",
+      "thread_ts": "1782339486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782343086.0186925",
+      "thread_ts": "1782339486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782343086.0186925",
+      "thread_ts": "1782343086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782343386.0186925",
+      "thread_ts": "1782343086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782343686.0186925",
+      "thread_ts": "1782343086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782343986.0186925",
+      "thread_ts": "1782343086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782346686.0186925",
+      "thread_ts": "1782343086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782346686.0186925",
+      "thread_ts": "1782346686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782346986.0186925",
+      "thread_ts": "1782346686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782350286.0186925",
+      "thread_ts": "1782346686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782350286.0186925",
+      "thread_ts": "1782350286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782350586.0186925",
+      "thread_ts": "1782350286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782353886.0186925",
+      "thread_ts": "1782350286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782353886.0186925",
+      "thread_ts": "1782353886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782354186.0186925",
+      "thread_ts": "1782353886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782354486.0186925",
+      "thread_ts": "1782353886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782354786.0186925",
+      "thread_ts": "1782353886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782357486.0186925",
+      "thread_ts": "1782353886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782357486.0186925",
+      "thread_ts": "1782357486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782357786.0186925",
+      "thread_ts": "1782357486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782361086.0186925",
+      "thread_ts": "1782357486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782361086.0186925",
+      "thread_ts": "1782361086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782361386.0186925",
+      "thread_ts": "1782361086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782361686.0186925",
+      "thread_ts": "1782361086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782361986.0186925",
+      "thread_ts": "1782361086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782364686.0186925",
+      "thread_ts": "1782361086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782364686.0186925",
+      "thread_ts": "1782364686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782364986.0186925",
+      "thread_ts": "1782364686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782365286.0186925",
+      "thread_ts": "1782364686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782368286.0186925",
+      "thread_ts": "1782364686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782368286.0186925",
+      "thread_ts": "1782368286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782368586.0186925",
+      "thread_ts": "1782368286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782368886.0186925",
+      "thread_ts": "1782368286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782369186.0186925",
+      "thread_ts": "1782368286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782371886.0186925",
+      "thread_ts": "1782368286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782371886.0186925",
+      "thread_ts": "1782371886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782372186.0186925",
+      "thread_ts": "1782371886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782372486.0186925",
+      "thread_ts": "1782371886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782375486.0186925",
+      "thread_ts": "1782371886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782375486.0186925",
+      "thread_ts": "1782375486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782375786.0186925",
+      "thread_ts": "1782375486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782376086.0186925",
+      "thread_ts": "1782375486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782379086.0186925",
+      "thread_ts": "1782375486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782379086.0186925",
+      "thread_ts": "1782379086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782379386.0186925",
+      "thread_ts": "1782379086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782379686.0186925",
+      "thread_ts": "1782379086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782382686.0186925",
+      "thread_ts": "1782379086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782382686.0186925",
+      "thread_ts": "1782382686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782382986.0186925",
+      "thread_ts": "1782382686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782386286.0186925",
+      "thread_ts": "1782382686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782386286.0186925",
+      "thread_ts": "1782386286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782386586.0186925",
+      "thread_ts": "1782386286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782386886.0186925",
+      "thread_ts": "1782386286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782387186.0186925",
+      "thread_ts": "1782386286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782389886.0186925",
+      "thread_ts": "1782386286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782389886.0186925",
+      "thread_ts": "1782389886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782390186.0186925",
+      "thread_ts": "1782389886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782393486.0186925",
+      "thread_ts": "1782389886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782393486.0186925",
+      "thread_ts": "1782393486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782393786.0186925",
+      "thread_ts": "1782393486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782394086.0186925",
+      "thread_ts": "1782393486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782397086.0186925",
+      "thread_ts": "1782393486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782397086.0186925",
+      "thread_ts": "1782397086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782397386.0186925",
+      "thread_ts": "1782397086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782400686.0186925",
+      "thread_ts": "1782397086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782400686.0186925",
+      "thread_ts": "1782400686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782400986.0186925",
+      "thread_ts": "1782400686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782401286.0186925",
+      "thread_ts": "1782400686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782404286.0186925",
+      "thread_ts": "1782400686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782404286.0186925",
+      "thread_ts": "1782404286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782404586.0186925",
+      "thread_ts": "1782404286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782404886.0186925",
+      "thread_ts": "1782404286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782407886.0186925",
+      "thread_ts": "1782404286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782407886.0186925",
+      "thread_ts": "1782407886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782408186.0186925",
+      "thread_ts": "1782407886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782411486.0186925",
+      "thread_ts": "1782407886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782411486.0186925",
+      "thread_ts": "1782411486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782411786.0186925",
+      "thread_ts": "1782411486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782412086.0186925",
+      "thread_ts": "1782411486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782412386.0186925",
+      "thread_ts": "1782411486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782415086.0186925",
+      "thread_ts": "1782411486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782415086.0186925",
+      "thread_ts": "1782415086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782415386.0186925",
+      "thread_ts": "1782415086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782418686.0186925",
+      "thread_ts": "1782415086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782418686.0186925",
+      "thread_ts": "1782418686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782418986.0186925",
+      "thread_ts": "1782418686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782419286.0186925",
+      "thread_ts": "1782418686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782419586.0186925",
+      "thread_ts": "1782418686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782422286.0186925",
+      "thread_ts": "1782418686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782422286.0186925",
+      "thread_ts": "1782422286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782422586.0186925",
+      "thread_ts": "1782422286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782422886.0186925",
+      "thread_ts": "1782422286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782423186.0186925",
+      "thread_ts": "1782422286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782425886.0186925",
+      "thread_ts": "1782422286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782425886.0186925",
+      "thread_ts": "1782425886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782426186.0186925",
+      "thread_ts": "1782425886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782426486.0186925",
+      "thread_ts": "1782425886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782429486.0186925",
+      "thread_ts": "1782425886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782429486.0186925",
+      "thread_ts": "1782429486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782429786.0186925",
+      "thread_ts": "1782429486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782430086.0186925",
+      "thread_ts": "1782429486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782430386.0186925",
+      "thread_ts": "1782429486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782433086.0186925",
+      "thread_ts": "1782429486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782433086.0186925",
+      "thread_ts": "1782433086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782433386.0186925",
+      "thread_ts": "1782433086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782433686.0186925",
+      "thread_ts": "1782433086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782433986.0186925",
+      "thread_ts": "1782433086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782436686.0186925",
+      "thread_ts": "1782433086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782436686.0186925",
+      "thread_ts": "1782436686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782436986.0186925",
+      "thread_ts": "1782436686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782437286.0186925",
+      "thread_ts": "1782436686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782437586.0186925",
+      "thread_ts": "1782436686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782440286.0186925",
+      "thread_ts": "1782436686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782440286.0186925",
+      "thread_ts": "1782440286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782440586.0186925",
+      "thread_ts": "1782440286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782440886.0186925",
+      "thread_ts": "1782440286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782443886.0186925",
+      "thread_ts": "1782440286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782443886.0186925",
+      "thread_ts": "1782443886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782444186.0186925",
+      "thread_ts": "1782443886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782444486.0186925",
+      "thread_ts": "1782443886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782447486.0186925",
+      "thread_ts": "1782443886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782447486.0186925",
+      "thread_ts": "1782447486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782447786.0186925",
+      "thread_ts": "1782447486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782448086.0186925",
+      "thread_ts": "1782447486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782448386.0186925",
+      "thread_ts": "1782447486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782451086.0186925",
+      "thread_ts": "1782447486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782451086.0186925",
+      "thread_ts": "1782451086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782451386.0186925",
+      "thread_ts": "1782451086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782454686.0186925",
+      "thread_ts": "1782451086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782454686.0186925",
+      "thread_ts": "1782454686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782454986.0186925",
+      "thread_ts": "1782454686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782455286.0186925",
+      "thread_ts": "1782454686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782455586.0186925",
+      "thread_ts": "1782454686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782458286.0186925",
+      "thread_ts": "1782454686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782458286.0186925",
+      "thread_ts": "1782458286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782458586.0186925",
+      "thread_ts": "1782458286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782461886.0186925",
+      "thread_ts": "1782458286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782461886.0186925",
+      "thread_ts": "1782461886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782462186.0186925",
+      "thread_ts": "1782461886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782465486.0186925",
+      "thread_ts": "1782461886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782465486.0186925",
+      "thread_ts": "1782465486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782465786.0186925",
+      "thread_ts": "1782465486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782469086.0186925",
+      "thread_ts": "1782465486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782469086.0186925",
+      "thread_ts": "1782469086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782469386.0186925",
+      "thread_ts": "1782469086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782472686.0186925",
+      "thread_ts": "1782469086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782472686.0186925",
+      "thread_ts": "1782472686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782472986.0186925",
+      "thread_ts": "1782472686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782476286.0186925",
+      "thread_ts": "1782472686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782476286.0186925",
+      "thread_ts": "1782476286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782476586.0186925",
+      "thread_ts": "1782476286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782476886.0186925",
+      "thread_ts": "1782476286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782479886.0186925",
+      "thread_ts": "1782476286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782479886.0186925",
+      "thread_ts": "1782479886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782480186.0186925",
+      "thread_ts": "1782479886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782480486.0186925",
+      "thread_ts": "1782479886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782480786.0186925",
+      "thread_ts": "1782479886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782483486.0186925",
+      "thread_ts": "1782479886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782483486.0186925",
+      "thread_ts": "1782483486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782483786.0186925",
+      "thread_ts": "1782483486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782484086.0186925",
+      "thread_ts": "1782483486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782487086.0186925",
+      "thread_ts": "1782483486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782487086.0186925",
+      "thread_ts": "1782487086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782487386.0186925",
+      "thread_ts": "1782487086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782490686.0186925",
+      "thread_ts": "1782487086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782490686.0186925",
+      "thread_ts": "1782490686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782490986.0186925",
+      "thread_ts": "1782490686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782491286.0186925",
+      "thread_ts": "1782490686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782491586.0186925",
+      "thread_ts": "1782490686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782494286.0186925",
+      "thread_ts": "1782490686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782494286.0186925",
+      "thread_ts": "1782494286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782494586.0186925",
+      "thread_ts": "1782494286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782494886.0186925",
+      "thread_ts": "1782494286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782495186.0186925",
+      "thread_ts": "1782494286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782497886.0186925",
+      "thread_ts": "1782494286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782497886.0186925",
+      "thread_ts": "1782497886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782498186.0186925",
+      "thread_ts": "1782497886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782498486.0186925",
+      "thread_ts": "1782497886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782498786.0186925",
+      "thread_ts": "1782497886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782501486.0186925",
+      "thread_ts": "1782497886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782501486.0186925",
+      "thread_ts": "1782501486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782501786.0186925",
+      "thread_ts": "1782501486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782502086.0186925",
+      "thread_ts": "1782501486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782502386.0186925",
+      "thread_ts": "1782501486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782505086.0186925",
+      "thread_ts": "1782501486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782505086.0186925",
+      "thread_ts": "1782505086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782505386.0186925",
+      "thread_ts": "1782505086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782505686.0186925",
+      "thread_ts": "1782505086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782508686.0186925",
+      "thread_ts": "1782505086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782508686.0186925",
+      "thread_ts": "1782508686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782508986.0186925",
+      "thread_ts": "1782508686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782509286.0186925",
+      "thread_ts": "1782508686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782512286.0186925",
+      "thread_ts": "1782508686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782512286.0186925",
+      "thread_ts": "1782512286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782512586.0186925",
+      "thread_ts": "1782512286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782515886.0186925",
+      "thread_ts": "1782512286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782515886.0186925",
+      "thread_ts": "1782515886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782516186.0186925",
+      "thread_ts": "1782515886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782516486.0186925",
+      "thread_ts": "1782515886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782519486.0186925",
+      "thread_ts": "1782515886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782519486.0186925",
+      "thread_ts": "1782519486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782519786.0186925",
+      "thread_ts": "1782519486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782520086.0186925",
+      "thread_ts": "1782519486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782523086.0186925",
+      "thread_ts": "1782519486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782523086.0186925",
+      "thread_ts": "1782523086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782523386.0186925",
+      "thread_ts": "1782523086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782523686.0186925",
+      "thread_ts": "1782523086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782523986.0186925",
+      "thread_ts": "1782523086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782526686.0186925",
+      "thread_ts": "1782523086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782526686.0186925",
+      "thread_ts": "1782526686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782526986.0186925",
+      "thread_ts": "1782526686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782530286.0186925",
+      "thread_ts": "1782526686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782530286.0186925",
+      "thread_ts": "1782530286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782530586.0186925",
+      "thread_ts": "1782530286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782530886.0186925",
+      "thread_ts": "1782530286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782531186.0186925",
+      "thread_ts": "1782530286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782533886.0186925",
+      "thread_ts": "1782530286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782533886.0186925",
+      "thread_ts": "1782533886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782534186.0186925",
+      "thread_ts": "1782533886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782534486.0186925",
+      "thread_ts": "1782533886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782537486.0186925",
+      "thread_ts": "1782533886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782537486.0186925",
+      "thread_ts": "1782537486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782537786.0186925",
+      "thread_ts": "1782537486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782541086.0186925",
+      "thread_ts": "1782537486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782541086.0186925",
+      "thread_ts": "1782541086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782541386.0186925",
+      "thread_ts": "1782541086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782541686.0186925",
+      "thread_ts": "1782541086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782544686.0186925",
+      "thread_ts": "1782541086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782544686.0186925",
+      "thread_ts": "1782544686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782544986.0186925",
+      "thread_ts": "1782544686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782545286.0186925",
+      "thread_ts": "1782544686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782545586.0186925",
+      "thread_ts": "1782544686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782548286.0186925",
+      "thread_ts": "1782544686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782548286.0186925",
+      "thread_ts": "1782548286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782548586.0186925",
+      "thread_ts": "1782548286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782548886.0186925",
+      "thread_ts": "1782548286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782551886.0186925",
+      "thread_ts": "1782548286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782551886.0186925",
+      "thread_ts": "1782551886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782552186.0186925",
+      "thread_ts": "1782551886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782555486.0186925",
+      "thread_ts": "1782551886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782555486.0186925",
+      "thread_ts": "1782555486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782555786.0186925",
+      "thread_ts": "1782555486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782556086.0186925",
+      "thread_ts": "1782555486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782559086.0186925",
+      "thread_ts": "1782555486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782559086.0186925",
+      "thread_ts": "1782559086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782559386.0186925",
+      "thread_ts": "1782559086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782559686.0186925",
+      "thread_ts": "1782559086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782559986.0186925",
+      "thread_ts": "1782559086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782562686.0186925",
+      "thread_ts": "1782559086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782562686.0186925",
+      "thread_ts": "1782562686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782562986.0186925",
+      "thread_ts": "1782562686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782566286.0186925",
+      "thread_ts": "1782562686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782566286.0186925",
+      "thread_ts": "1782566286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782566586.0186925",
+      "thread_ts": "1782566286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782566886.0186925",
+      "thread_ts": "1782566286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782569886.0186925",
+      "thread_ts": "1782566286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782569886.0186925",
+      "thread_ts": "1782569886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782570186.0186925",
+      "thread_ts": "1782569886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782570486.0186925",
+      "thread_ts": "1782569886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782573486.0186925",
+      "thread_ts": "1782569886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782573486.0186925",
+      "thread_ts": "1782573486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782573786.0186925",
+      "thread_ts": "1782573486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782574086.0186925",
+      "thread_ts": "1782573486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782577086.0186925",
+      "thread_ts": "1782573486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782577086.0186925",
+      "thread_ts": "1782577086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782577386.0186925",
+      "thread_ts": "1782577086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782580686.0186925",
+      "thread_ts": "1782577086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782580686.0186925",
+      "thread_ts": "1782580686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782580986.0186925",
+      "thread_ts": "1782580686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to optimize this downstream API call tomorrow.",
+      "ts": "1782584286.0186925",
+      "thread_ts": "1782580686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782584286.0186925",
+      "thread_ts": "1782584286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782584586.0186925",
+      "thread_ts": "1782584286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782587886.0186925",
+      "thread_ts": "1782584286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782587886.0186925",
+      "thread_ts": "1782587886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782588186.0186925",
+      "thread_ts": "1782587886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782588486.0186925",
+      "thread_ts": "1782587886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782588786.0186925",
+      "thread_ts": "1782587886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782591486.0186925",
+      "thread_ts": "1782587886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782591486.0186925",
+      "thread_ts": "1782591486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782591786.0186925",
+      "thread_ts": "1782591486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782592086.0186925",
+      "thread_ts": "1782591486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782592386.0186925",
+      "thread_ts": "1782591486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782595086.0186925",
+      "thread_ts": "1782591486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782595086.0186925",
+      "thread_ts": "1782595086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782595386.0186925",
+      "thread_ts": "1782595086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782595686.0186925",
+      "thread_ts": "1782595086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782595986.0186925",
+      "thread_ts": "1782595086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782598686.0186925",
+      "thread_ts": "1782595086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782598686.0186925",
+      "thread_ts": "1782598686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782598986.0186925",
+      "thread_ts": "1782598686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782599286.0186925",
+      "thread_ts": "1782598686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782599586.0186925",
+      "thread_ts": "1782598686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782602286.0186925",
+      "thread_ts": "1782598686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782602286.0186925",
+      "thread_ts": "1782602286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782602586.0186925",
+      "thread_ts": "1782602286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782602886.0186925",
+      "thread_ts": "1782602286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782605886.0186925",
+      "thread_ts": "1782602286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782605886.0186925",
+      "thread_ts": "1782605886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782606186.0186925",
+      "thread_ts": "1782605886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782606486.0186925",
+      "thread_ts": "1782605886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782606786.0186925",
+      "thread_ts": "1782605886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782609486.0186925",
+      "thread_ts": "1782605886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782609486.0186925",
+      "thread_ts": "1782609486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782609786.0186925",
+      "thread_ts": "1782609486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782610086.0186925",
+      "thread_ts": "1782609486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782610386.0186925",
+      "thread_ts": "1782609486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782613086.0186925",
+      "thread_ts": "1782609486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782613086.0186925",
+      "thread_ts": "1782613086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782613386.0186925",
+      "thread_ts": "1782613086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782613686.0186925",
+      "thread_ts": "1782613086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782616686.0186925",
+      "thread_ts": "1782613086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782616686.0186925",
+      "thread_ts": "1782616686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782616986.0186925",
+      "thread_ts": "1782616686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782620286.0186925",
+      "thread_ts": "1782616686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782620286.0186925",
+      "thread_ts": "1782620286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782620586.0186925",
+      "thread_ts": "1782620286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782620886.0186925",
+      "thread_ts": "1782620286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782621186.0186925",
+      "thread_ts": "1782620286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782623886.0186925",
+      "thread_ts": "1782620286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1782623886.0186925",
+      "thread_ts": "1782623886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782624186.0186925",
+      "thread_ts": "1782623886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782624486.0186925",
+      "thread_ts": "1782623886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782624786.0186925",
+      "thread_ts": "1782623886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782627486.0186925",
+      "thread_ts": "1782623886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1782627486.0186925",
+      "thread_ts": "1782627486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782627786.0186925",
+      "thread_ts": "1782627486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782631086.0186925",
+      "thread_ts": "1782627486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782631086.0186925",
+      "thread_ts": "1782631086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782631386.0186925",
+      "thread_ts": "1782631086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782634686.0186925",
+      "thread_ts": "1782631086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782634686.0186925",
+      "thread_ts": "1782634686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782634986.0186925",
+      "thread_ts": "1782634686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782635286.0186925",
+      "thread_ts": "1782634686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782638286.0186925",
+      "thread_ts": "1782634686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782638286.0186925",
+      "thread_ts": "1782638286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782638586.0186925",
+      "thread_ts": "1782638286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782641886.0186925",
+      "thread_ts": "1782638286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782641886.0186925",
+      "thread_ts": "1782641886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782642186.0186925",
+      "thread_ts": "1782641886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782645486.0186925",
+      "thread_ts": "1782641886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782645486.0186925",
+      "thread_ts": "1782645486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782645786.0186925",
+      "thread_ts": "1782645486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782646086.0186925",
+      "thread_ts": "1782645486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Added jitter to our retry logic to prevent the thundering herd. DB CPU is dropping.",
+      "ts": "1782649086.0186925",
+      "thread_ts": "1782645486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782649086.0186925",
+      "thread_ts": "1782649086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782649386.0186925",
+      "thread_ts": "1782649086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer.",
+      "ts": "1782652686.0186925",
+      "thread_ts": "1782649086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782652686.0186925",
+      "thread_ts": "1782652686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782652986.0186925",
+      "thread_ts": "1782652686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782653286.0186925",
+      "thread_ts": "1782652686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782656286.0186925",
+      "thread_ts": "1782652686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1782656286.0186925",
+      "thread_ts": "1782656286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782656586.0186925",
+      "thread_ts": "1782656286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782656886.0186925",
+      "thread_ts": "1782656286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782657186.0186925",
+      "thread_ts": "1782656286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782659886.0186925",
+      "thread_ts": "1782656286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782659886.0186925",
+      "thread_ts": "1782659886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782660186.0186925",
+      "thread_ts": "1782659886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I can reproduce this locally. The query is doing a full table scan.",
+      "ts": "1782660486.0186925",
+      "thread_ts": "1782659886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Attached the correct IAM policy to the task role. S3 uploads are working.",
+      "ts": "1782663486.0186925",
+      "thread_ts": "1782659886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782663486.0186925",
+      "thread_ts": "1782663486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782663786.0186925",
+      "thread_ts": "1782663486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782664086.0186925",
+      "thread_ts": "1782663486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782664386.0186925",
+      "thread_ts": "1782663486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782667086.0186925",
+      "thread_ts": "1782663486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1782667086.0186925",
+      "thread_ts": "1782667086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Rolling back the last deployment to see if it stabilizes.",
+      "ts": "1782667386.0186925",
+      "thread_ts": "1782667086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782667686.0186925",
+      "thread_ts": "1782667086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782670686.0186925",
+      "thread_ts": "1782667086.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1782670686.0186925",
+      "thread_ts": "1782670686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782670986.0186925",
+      "thread_ts": "1782670686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1782671286.0186925",
+      "thread_ts": "1782670686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782671586.0186925",
+      "thread_ts": "1782670686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782674286.0186925",
+      "thread_ts": "1782670686.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1782674286.0186925",
+      "thread_ts": "1782674286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782674586.0186925",
+      "thread_ts": "1782674286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Checking AWS Health Dashboard. No known outages in our region.",
+      "ts": "1782674886.0186925",
+      "thread_ts": "1782674286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support.",
+      "ts": "1782677886.0186925",
+      "thread_ts": "1782674286.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782677886.0186925",
+      "thread_ts": "1782677886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "I'm checking CloudWatch logs. Looks like we hit a connection limit.",
+      "ts": "1782678186.0186925",
+      "thread_ts": "1782677886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Scaled up the ECS memory limits from 2GB to 4GB. Stable now. Next action: Profile the heap dump tomorrow.",
+      "ts": "1782681486.0186925",
+      "thread_ts": "1782677886.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1782681486.0186925",
+      "thread_ts": "1782681486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782681786.0186925",
+      "thread_ts": "1782681486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The IAM role for the ECS task seems to be missing the `s3:PutObject` permission.",
+      "ts": "1782682086.0186925",
+      "thread_ts": "1782681486.0186925"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Still investigating the Hikari pool exhaustion. DB locks might be the root cause.",
+      "ts": "1782685086.0186925",
+      "thread_ts": "1782681486.0186925"
+    }
+  ]
+}

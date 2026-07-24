@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --chat-bg: #141414;
+            --wood-accent: #8b5a2b;
+            --wood-light: #a67345;
+            --text-main: #e0e0e0;
+            --border-color: #333;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #chat-container {
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            background-color: var(--chat-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--wood-accent);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        #chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--wood-accent);
+            color: #fff;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #242424;
+            border: 1px solid var(--border-color);
+        }
+
+        #input-area {
+            display: flex;
+            padding: 16px;
+            background-color: #1a1a1a;
+            border-top: 1px solid var(--border-color);
+        }
+
+        #prompt-input {
+            flex: 1;
+            background-color: #0a0a0a;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            resize: none;
+            outline: none;
+        }
+
+        #prompt-input:focus {
+            border-color: var(--wood-light);
+        }
+
+        #send-btn {
+            background-color: var(--wood-accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0 24px;
+            margin-left: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #send-btn:hover {
+            background-color: var(--wood-light);
+        }
+
+        #send-btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            align-self: flex-start;
+            color: var(--wood-light);
+            font-size: 14px;
+            font-style: italic;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="chat-box">
+        <div class="message bot-message">System ready. What are we building?</div>
+    </div>
+    <div class="loading" id="loading-indicator">Thinking...</div>
+    <div id="input-area">
+        <textarea id="prompt-input" rows="1" placeholder="Type your message..." onkeypress="handleEnter(event)"></textarea>
+        <button id="send-btn" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<script>
+    async function sendMessage() {
+        const inputField = document.getElementById('prompt-input');
+        const message = inputField.value.trim();
+        if (!message) return;
+
+        appendMessage(message, 'user-message');
+        inputField.value = '';
+
+        const btn = document.getElementById('send-btn');
+        const loading = document.getElementById('loading-indicator');
+
+        btn.disabled = true;
+        loading.style.display = 'block';
+
+        try {
+            // Using a relative path works seamlessly if served from src/main/resources/static/
+            const response = await fetch('http://localhost:8080/api/ai/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: message
+            });
+
+            if (response.ok) {
+                const data = await response.text();
+                appendMessage(data, 'bot-message');
+            } else {
+                const errorText = await response.text();
+                console.p('Backend Error:', errorText);
+                appendMessage(`Error: Server responded with status ${response.status}`, 'bot-message');
+            }
+        } catch (error) {
+            console.error('Network/Fetch Error:', error);
+            appendMessage('Error: Failed to connect to backend. Check browser console (F12).', 'bot-message');
+        } finally {
+            btn.disabled = false;
+            loading.style.display = 'none';
+            inputField.focus();
+        }
+    }
+
+    function appendMessage(text, className) {
+        const chatBox = document.getElementById('chat-box');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+        messageDiv.textContent = text;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function handleEnter(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            sendMessage();
+        }
+    }
+</script>
+</body>
+</html>
