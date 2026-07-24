@@ -1,5 +1,6 @@
 package com.devara.ai.meshmind.config;
 
+import com.devara.ai.meshmind.CustomerSupportAssistant;
 import com.devara.ai.meshmind.OnCallAssistant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.model.chat.ChatModel;
@@ -54,7 +55,7 @@ public class LangChainConfig {
 
   @Bean
   public EmbeddingStore embeddingStore() {
-    return new InMemoryEmbeddingStore<>();
+    return new InMemoryEmbeddingStore<>(); // change this to dedicated embedding store like lanceDB or pgvector
   }
 
   @Bean
@@ -70,6 +71,14 @@ public class LangChainConfig {
   @Bean
   public OnCallAssistant wikiAssistant(ChatModel chatModel, ContentRetriever contentRetriever) {
     return AiServices.builder(OnCallAssistant.class)
+        .chatModel(chatModel)
+        .contentRetriever(contentRetriever) // enables RAG
+        .build();
+  }
+
+  @Bean
+  public CustomerSupportAssistant customerSupportAssistant(ChatModel chatModel, ContentRetriever contentRetriever) {
+    return AiServices.builder(CustomerSupportAssistant.class)
         .chatModel(chatModel)
         .contentRetriever(contentRetriever) // enables RAG
         .build();

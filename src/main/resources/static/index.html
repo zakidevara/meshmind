@@ -151,7 +151,7 @@
 
         try {
             // Using a relative path works seamlessly if served from src/main/resources/static/
-            const response = await fetch('http://localhost:8080/api/ai/ask', {
+            const response = await fetch('http://localhost:8080/api/ai/ask/customer-support', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'text/plain'
