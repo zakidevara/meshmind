@@ -7,6 +7,10 @@ app:
   llm:
     # switch between "openai" and "gemini" without touching code
     provider: openai
+  ingest:
+    # if true, each Slack thread is summarized by the LLM before embedding
+    # (cleaner retrieval on noisy chat data, at the cost of extra LLM calls on startup)
+    summarize: true
 langchain4j:
   google:
     ai:
@@ -16,3 +20,6 @@ langchain4j:
   open-ai:
     api-key: ${OPENAI_API_KEY:}
     model-name: gpt-4o-mini
+logging:
+  level:
+    com.devara.ai.meshmind.data.SlackDataLoader: DEBUG

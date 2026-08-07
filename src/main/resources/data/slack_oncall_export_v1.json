@@ -1,0 +1,480 @@
+{
+  "messages": [
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P1: ECS tasks for the main Spring Boot app are crash-looping with OOMKilled.",
+      "ts": "1783540898.401368",
+      "thread_ts": "1783540898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Looking into Datadog now. CPU is normal but memory spiked right before the crash.",
+      "ts": "1783541198.401368",
+      "thread_ts": "1783540898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "I pulled a heap dump from the last running task. Retained size on the response cache is 1.8GB \u2014 the LRU eviction isn't firing.",
+      "ts": "1783541498.401368",
+      "thread_ts": "1783540898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Confirmed: the cache TTL was accidentally set to Duration.ZERO in the last deploy, so entries never expire.",
+      "ts": "1783541798.401368",
+      "thread_ts": "1783540898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Reverted the cache TTL change and scaled ECS memory from 2GB to 4GB as a safety buffer. Stable now. Next action: Profile the heap dump tomorrow to right-size the memory limit.",
+      "ts": "1783544498.401368",
+      "thread_ts": "1783540898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P2: Huge spike in the SQS Dead Letter Queue (DLQ) for payment processing.",
+      "ts": "1783544498.401368",
+      "thread_ts": "1783544498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "DLQ is at 12k messages. Sampling a few \u2014 they all fail JSON parsing on the `refund_reason` field.",
+      "ts": "1783544798.401368",
+      "thread_ts": "1783544498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The upstream team started sending `refund_reason: null` last night. Our consumer's Jackson config rejects nulls on that field.",
+      "ts": "1783545098.401368",
+      "thread_ts": "1783544498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Patched the consumer to treat null as empty string and redeployed.",
+      "ts": "1783545398.401368",
+      "thread_ts": "1783544498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Mitigation: Flushed the SQS DLQ back to the main queue after fixing the parsing bug in the consumer. DLQ is draining at ~200/s.",
+      "ts": "1783548098.401368",
+      "thread_ts": "1783544498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P1: API Gateway is returning 502s for the checkout endpoint.",
+      "ts": "1783548098.401368",
+      "thread_ts": "1783548098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Started ~15 min ago. Correlated with the API Gateway integration timeout config change we pushed at 14:02.",
+      "ts": "1783548398.401368",
+      "thread_ts": "1783548098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Reverted the timeout change back to 29s. Still seeing 502s.",
+      "ts": "1783548698.401368",
+      "thread_ts": "1783548098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The underlying Lambda is timing out at 30s now \u2014 the API Gateway revert didn't help because the Lambda itself was also changed.",
+      "ts": "1783548998.401368",
+      "thread_ts": "1783548098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Pending: Reverted the API Gateway config, but we are still seeing 502s. Escalating to AWS support and rolling back the Lambda deployment as well.",
+      "ts": "1783551698.401368",
+      "thread_ts": "1783548098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P3: HikariCP connection pool timeout exceptions in the user service.",
+      "ts": "1783551698.401368",
+      "thread_ts": "1783551698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pool size is 20, active connections 20 \u2014 pool is saturated. Checking slow query log.",
+      "ts": "1783551998.401368",
+      "thread_ts": "1783551698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Found it: the new `getUserSessions` query is doing a full table scan on `sessions` because we forgot the index on `user_id`.",
+      "ts": "1783552298.401368",
+      "thread_ts": "1783551698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Adding the index now with CONCURRENTLY so we don't lock the table.",
+      "ts": "1783552598.401368",
+      "thread_ts": "1783551698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Added btree index on sessions(user_id). Query latency dropped from 4s to 8ms. Pool utilization back to <20%.",
+      "ts": "1783555298.401368",
+      "thread_ts": "1783551698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Thundering herd effect observed on the cache cluster after the Redis restart.",
+      "ts": "1783555298.401368",
+      "thread_ts": "1783555298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "All services fired their cache-miss fallback simultaneously. DB CPU pegged at 100%.",
+      "ts": "1783555598.401368",
+      "thread_ts": "1783555298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Root cause is that our clients have zero jitter on cache reconnect \u2014 they all hit the DB in the same 200ms window.",
+      "ts": "1783555898.401368",
+      "thread_ts": "1783555298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Added exponential backoff with jitter (0-500ms) to our retry logic to prevent the thundering herd. DB CPU is dropping. Deployed to all services.",
+      "ts": "1783558898.401368",
+      "thread_ts": "1783555298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Lambda timeouts on the third-party webhook handler.",
+      "ts": "1783558898.401368",
+      "thread_ts": "1783558898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The webhook forwards to Stripe's API. Stripe is showing degraded status on their status page.",
+      "ts": "1783559198.401368",
+      "thread_ts": "1783558898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Our Lambda timeout is 10s but Stripe is taking 12-14s to respond right now.",
+      "ts": "1783559498.401368",
+      "thread_ts": "1783558898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Pending: Increased Lambda timeout to 15s as a band-aid. We need to make this handler async (SQS-backed) tomorrow so we don't block on Stripe.",
+      "ts": "1783562498.401368",
+      "thread_ts": "1783558898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: S3 Access Denied errors when the new reporting cron tries to upload PDFs.",
+      "ts": "1783562498.401368",
+      "thread_ts": "1783562498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The cron runs as the `reporting-task` ECS task role. Checking the attached IAM policy.",
+      "ts": "1783562798.401368",
+      "thread_ts": "1783562498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The IAM role for the ECS task is missing `s3:PutObject` on the `reports-prod` bucket. It only has `s3:GetObject`.",
+      "ts": "1783563098.401368",
+      "thread_ts": "1783562498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Attached the correct IAM policy granting s3:PutObject on arn:aws:s3:::reports-prod/*. Uploads are working.",
+      "ts": "1783566098.401368",
+      "thread_ts": "1783562498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Internal service-to-service TLS handshake failing with 'certificate expired'.",
+      "ts": "1783566098.401368",
+      "thread_ts": "1783566098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "The internal CA cert for the `orders` service expired at 00:00 UTC. Renewal cron didn't fire.",
+      "ts": "1783566398.401368",
+      "thread_ts": "1783566098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "The renewal cron was tied to the old Jenkins job that we decommissioned last month. No one migrated it.",
+      "ts": "1783566698.401368",
+      "thread_ts": "1783566098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Manually rotated the cert via cert-manager and set up a new K8s CronJob for renewals. Added a Datadog monitor for cert expiry <14 days.",
+      "ts": "1783569698.401368",
+      "thread_ts": "1783566098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P1: Post-deploy NullPointerException on the checkout confirmation page.",
+      "ts": "1783569698.401368",
+      "thread_ts": "1783569698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The new PromotionService returns null when no promo applies, but the caller assumes an empty Optional.",
+      "ts": "1783569998.401368",
+      "thread_ts": "1783569698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Rolling back deployment v2.14.3 to v2.14.2 now.",
+      "ts": "1783570298.401368",
+      "thread_ts": "1783569698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Resolution: Rolled back the deployment. Fix PR is up to make PromotionService return Optional.empty() instead of null. Will redeploy after review.",
+      "ts": "1783573298.401368",
+      "thread_ts": "1783569698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: RDS primary failed over to a different AZ unexpectedly.",
+      "ts": "1783573298.401368",
+      "thread_ts": "1783573298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "AWS Health Dashboard shows scheduled maintenance in us-east-1a. Our primary was in that AZ.",
+      "ts": "1783573598.401368",
+      "thread_ts": "1783573298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Replica in us-east-1b was promoted. Seeing ~30s of connection errors during the flip.",
+      "ts": "1783573898.401368",
+      "thread_ts": "1783573298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Failover completed cleanly. Reviewed our HikariCP config \u2014 reduced `maxLifetime` to 30 min so connections rotate more often and pick up DNS changes faster.",
+      "ts": "1783576898.401368",
+      "thread_ts": "1783573298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P2: Kafka consumer lag on the analytics pipeline growing at 5k msg/min.",
+      "ts": "1783576898.401368",
+      "thread_ts": "1783576898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Consumer group rebalance is happening every 90s \u2014 one consumer keeps getting kicked.",
+      "ts": "1783577198.401368",
+      "thread_ts": "1783576898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The kicked consumer's session timeout is hitting because a downstream ClickHouse write is taking 45s.",
+      "ts": "1783577498.401368",
+      "thread_ts": "1783576898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Increased Kafka `session.timeout.ms` from 30s to 60s and added batch flushing to the ClickHouse writer. Lag draining at 8k/min.",
+      "ts": "1783580498.401368",
+      "thread_ts": "1783576898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": ":siren: P3: Prometheus scrapes failing for all pods in the `payments` namespace.",
+      "ts": "1783580498.401368",
+      "thread_ts": "1783580498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Prometheus can't reach the pod IPs. Testing from the Prometheus pod: connection refused.",
+      "ts": "1783580798.401368",
+      "thread_ts": "1783580498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "New NetworkPolicy was applied to `payments` yesterday that only allows ingress from `frontend` namespace. Prometheus is in `monitoring`.",
+      "ts": "1783581098.401368",
+      "thread_ts": "1783580498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "Resolution: Updated the NetworkPolicy to also allow ingress from the `monitoring` namespace on the metrics port. Scrapes recovered.",
+      "ts": "1783584098.401368",
+      "thread_ts": "1783580498.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": ":siren: P2: Users seeing stale JavaScript bundle after the frontend deploy.",
+      "ts": "1783584098.401368",
+      "thread_ts": "1783584098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "CloudFront is serving the old `main.abc123.js` \u2014 cache TTL is set to 1 year on the bundle.",
+      "ts": "1783584398.401368",
+      "thread_ts": "1783584098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "That's expected for hashed assets, but the `index.html` also has 1 year TTL, so browsers never fetch the new bundle name.",
+      "ts": "1783584698.401368",
+      "thread_ts": "1783584098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "Resolution: Set Cache-Control: no-cache on index.html in the CloudFront behavior. Invalidated /index.html. Users will pick up new bundles on next page load.",
+      "ts": "1783587698.401368",
+      "thread_ts": "1783584098.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": ":siren: P2: DynamoDB throttling on the `sessions` table, ~2% of reads failing.",
+      "ts": "1783587698.401368",
+      "thread_ts": "1783587698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "CloudWatch shows one partition getting 80% of the traffic. Classic hot partition.",
+      "ts": "1783587998.401368",
+      "thread_ts": "1783587698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "The partition key is `tenant_id` \u2014 one enterprise customer accounts for 60% of active sessions.",
+      "ts": "1783588298.401368",
+      "thread_ts": "1783587698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U4444D",
+      "text": "Pending: Adding a suffix (`tenant_id#shard_N` where N = hash(session_id) % 10) to spread writes. Migration will happen this weekend during the low-traffic window.",
+      "ts": "1783591298.401368",
+      "thread_ts": "1783587698.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": ":siren: P2: Nginx ingress returning 504 Gateway Timeout for /api/reports endpoint.",
+      "ts": "1783591298.401368",
+      "thread_ts": "1783591298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U2222B",
+      "text": "The reports endpoint generates PDFs and can take 45s. Nginx ingress default timeout is 60s but I'm seeing 504s at exactly 30s.",
+      "ts": "1783591598.401368",
+      "thread_ts": "1783591298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Found it \u2014 the ingress has `nginx.ingress.kubernetes.io/proxy-read-timeout: \"30\"` in its annotations from a copy-paste from another service.",
+      "ts": "1783591898.401368",
+      "thread_ts": "1783591298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U5555E",
+      "text": "Resolution: Bumped proxy-read-timeout to 90s for the /api/reports path. Long-term: move PDF generation to an async job queue so the HTTP request returns immediately.",
+      "ts": "1783594898.401368",
+      "thread_ts": "1783591298.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": ":siren: P3: JVM GC pauses of 3-5s observed on the recommendations service.",
+      "ts": "1783594898.401368",
+      "thread_ts": "1783594898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U3333C",
+      "text": "G1GC logs show Full GC events triggered by humongous allocations. Something is allocating >12MB objects (region size is 24MB / 2).",
+      "ts": "1783595198.401368",
+      "thread_ts": "1783594898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "The new recommendation model loads a 40MB feature array into a single ByteBuffer on every request.",
+      "ts": "1783595498.401368",
+      "thread_ts": "1783594898.401368"
+    },
+    {
+      "type": "message",
+      "user": "U1111A",
+      "text": "Resolution: Moved the feature array to a shared static field (loaded once at startup). Full GC events dropped to zero. P99 latency down from 800ms to 60ms.",
+      "ts": "1783598498.401368",
+      "thread_ts": "1783594898.401368"
+    }
+  ]
+}

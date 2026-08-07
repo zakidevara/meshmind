@@ -1,6 +1,7 @@
 package com.devara.ai.meshmind.config;
 
 import com.devara.ai.meshmind.OnCallAssistant;
+import com.devara.ai.meshmind.SlackThreadSummarizer;
 import com.devara.ai.meshmind.evaluation.LoggingContentRetriever;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.segment.TextSegment;
@@ -109,6 +110,13 @@ public class LangChainConfig {
         .chatModel(chatModel)
         .chatMemory(chatMemory)
         .contentRetriever(contentRetriever) // enables RAG
+        .build();
+  }
+
+  @Bean
+  public SlackThreadSummarizer slackThreadSummarizer(ChatModel chatModel) {
+    return AiServices.builder(SlackThreadSummarizer.class)
+        .chatModel(chatModel)
         .build();
   }
 

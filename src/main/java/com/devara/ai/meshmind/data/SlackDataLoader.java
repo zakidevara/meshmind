@@ -1,5 +1,6 @@
 package com.devara.ai.meshmind.data;
 
+import com.devara.ai.meshmind.SlackThreadSummarizer;
 import com.devara.ai.meshmind.model.SlackExport;
 import com.devara.ai.meshmind.model.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -26,47 +28,58 @@ public class SlackDataLoader implements CommandLineRunner {
   private final EmbeddingStore<TextSegment> embeddingStore;
   private final EmbeddingModel embeddingModel;
   private final ObjectMapper objectMapper;
+  private final SlackThreadSummarizer summarizer;
+  private final boolean summarizeEnabled;
 
   public SlackDataLoader(EmbeddingStore<TextSegment> embeddingStore,
                          EmbeddingModel embeddingModel,
-                         ObjectMapper objectMapper) {
+                         ObjectMapper objectMapper,
+                         SlackThreadSummarizer summarizer,
+                         @Value("${app.ingest.summarize:true}") boolean summarizeEnabled) {
     this.embeddingStore = embeddingStore;
     this.embeddingModel = embeddingModel;
     this.objectMapper = objectMapper;
+    this.summarizer = summarizer;
+    this.summarizeEnabled = summarizeEnabled;
   }
 
   @Override
   public void run(String... args) throws Exception {
-    // read json file from resources folder
     ClassPathResource resource = new ClassPathResource("data/slack_oncall_export.json");
-
     SlackExport export = objectMapper.readValue(resource.getInputStream(), SlackExport.class);
 
-    // group messages to threads by thread_ts
     Map<String, List<SlackMessage>> threadsByTimestamp = export.messages().stream()
         .filter(message -> message.threadTs() != null)
         .collect(Collectors.groupingBy(SlackMessage::threadTs));
 
-    // convert each thread to single document
+    log.info("Loaded {} Slack threads. Summarization enabled: {}", threadsByTimestamp.size(), summarizeEnabled);
+
     List<Document> documents = new ArrayList<>();
+    int index = 0;
     for (Map.Entry<String, List<SlackMessage>> entry : threadsByTimestamp.entrySet()) {
-
+      index++;
       List<SlackMessage> threadMessages = entry.getValue();
-
       threadMessages.sort(Comparator.comparing(SlackMessage::ts));
 
-      // concat conversations
-      String threadContent = threadMessages.stream()
+      String rawThread = threadMessages.stream()
           .map(m -> m.user() + ": " + m.text())
           .collect(Collectors.joining("\n"));
 
-      Metadata metadata = Metadata.from("source", "slack_oncall")
-          .put("thread_ts", entry.getKey());
+      String content;
+      if (summarizeEnabled) {
+        log.info("Summarizing thread {}/{} ({})", index, threadsByTimestamp.size(), entry.getKey());
+        content = summarizer.summarize(rawThread);
+      } else {
+        content = rawThread;
+      }
 
-      documents.add(Document.from(threadContent, metadata));
+      Metadata metadata = Metadata.from("source", "slack_oncall")
+          .put("thread_ts", entry.getKey())
+          .put("raw_thread", rawThread);
+
+      documents.add(Document.from(content, metadata));
     }
 
-    // ingest to vector store
     EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
         .embeddingModel(embeddingModel)
         .embeddingStore(embeddingStore)
@@ -75,13 +88,8 @@ public class SlackDataLoader implements CommandLineRunner {
     ingestor.ingest(documents);
 
     log.info("Ingested {} Slack threads into the embedding store.", documents.size());
-    log.info("[DEBUG] {}", documents.stream().map(doc -> {
-      StringBuilder sb = new StringBuilder();
-      sb.append("Document: ").append(doc.text()).append("\n");
-      sb.append("Metadata: ").append(doc.metadata().toMap()).append("\n");
-      sb.append("=====================================================").append("\n");
-      return sb.toString();
-    })
-      .toList());
+    if (log.isDebugEnabled()) {
+      documents.forEach(doc -> log.debug("Ingested doc:\n{}\n---", doc.text()));
+    }
   }
 }
