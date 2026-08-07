@@ -29,8 +29,17 @@ An AI assistant built with Spring Boot, LangChain4j, and Gemini/Ollama. Designed
 1. Configure your environment variables:
 Create a `.env` file in the root directory with the following content:
 ```
+# For OpenAI (default LLM provider)
+OPENAI_API_KEY=your_openai_api_key_here
 # For Gemini
 GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+**Switch LLM provider** via `application.yaml` (no code change needed):
+```yaml
+app:
+  llm:
+    provider: openai   # or: gemini
 ```
 
 2. Build and run the application:
@@ -115,23 +124,27 @@ The script prints aggregate scores to the console and saves per-sample results t
 
 ### Sample results
 
-Aggregate scores from a two-sample run against the on-call assistant:
+Aggregate scores from a three-sample run against the on-call assistant:
 
 ```
 === Evaluation Results ===
-{'faithfulness': 0.6333, 'answer_relevancy': 0.6169}
+{'faithfulness': 0.4644, 'answer_relevancy': 0.5689}
 ```
 
 Per-sample breakdown from `eval\eval_results.csv`:
 
 | # | Question | Faithfulness | Answer Relevancy |
 |---|---|---:|---:|
-| 1 | *have there been any issue causing from API Gateway 5xx recently?* | 0.667 | 0.808 |
-| 2 | *I am experiencing OOM in one of my service. Is there any similar incident recently, what is the root cause and how do you resolve it?* | 0.600 | 0.426 |
+| 1 | *The checkout endpoint is returning 502s. Is there any similar issue previously? what is the root cause and how to resolve it?* | 0.615 | 0.817 |
+| 2 | *There is a sudden surge of traffic to our DB causing CPU utilization to be high. What could be the reason?* | 0.000 | 0.000 |
+| 3 | *There is a sudden surge of traffic to our DB causing 100% CPU. What could be the reason?* | 0.778 | 0.889 |
 
 **Reading the results:**
-- Sample 1 scores well on relevancy (0.81) but only 0.67 on faithfulness — the answer mentions "escalating to AWS support" which is supported by context, but some framing claims aren't fully grounded.
-- Sample 2 has low relevancy (0.43) because the answer partially conflates two different incidents (OOM vs. SQS DLQ spike) that were both retrieved. This is a retrieval-quality signal: the assistant is being led astray by loosely related contexts.
+- **Sample 1** — retrieval correctly pulled the API Gateway 502 thread (Lambda timeout root cause). Relevancy is high (0.82) because the answer directly addresses the question. Faithfulness at 0.62 reflects a few summarization claims that go slightly beyond what the retrieved messages literally state.
+- **Sample 2** — both metrics are **zero** because the assistant returned the fallback *"I cannot find this information in the internal knowledge base."* Retrieval didn't clear the `minScore=0.7` threshold on any chunk for this phrasing, so the LLM had no context to work with.
+- **Sample 3** — the **exact same intent** as sample 2, but reworded ("100% CPU" instead of "CPU utilization to be high") crosses the retrieval threshold and pulls in the Redis thundering-herd thread. Scores jump to 0.78 / 0.89.
+
+**The signal in samples 2 vs. 3** — a small phrasing change flips the pipeline between fallback and a strong answer. This is a retrieval-tuning signal: consider lowering `minScore`, adding query rewriting, or using hybrid (BM25 + vector) search so keyword overlap ("CPU") isn't the deciding factor.
 
 ### Overriding paths and models
 

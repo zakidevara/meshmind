@@ -3,9 +3,16 @@ spring:
     name: meshmind
   config:
     import: optional:file:.env[.properties]
+app:
+  llm:
+    # switch between "openai" and "gemini" without touching code
+    provider: openai
 langchain4j:
   google:
     ai:
       gemini:
-        api-key: ${GEMINI_API_KEY}
+        api-key: ${GEMINI_API_KEY:}
         model-name: gemini-2.5-flash
+  open-ai:
+    api-key: ${OPENAI_API_KEY:}
+    model-name: gpt-4o-mini

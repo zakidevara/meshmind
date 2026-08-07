@@ -75,6 +75,13 @@ public class SlackDataLoader implements CommandLineRunner {
     ingestor.ingest(documents);
 
     log.info("Ingested {} Slack threads into the embedding store.", documents.size());
-    log.info("[DEBUG] {}", documents.stream().map(Document::text).toList());
+    log.info("[DEBUG] {}", documents.stream().map(doc -> {
+      StringBuilder sb = new StringBuilder();
+      sb.append("Document: ").append(doc.text()).append("\n");
+      sb.append("Metadata: ").append(doc.metadata().toMap()).append("\n");
+      sb.append("=====================================================").append("\n");
+      return sb.toString();
+    })
+      .toList());
   }
 }

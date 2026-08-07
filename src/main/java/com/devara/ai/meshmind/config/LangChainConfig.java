@@ -5,13 +5,13 @@ import com.devara.ai.meshmind.evaluation.LoggingContentRetriever;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
-import dev.langchain4j.model.googleai.GoogleAiGeminiTokenCountEstimator;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
@@ -19,10 +19,10 @@ import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import java.time.Duration;
 
@@ -33,6 +33,12 @@ public class LangChainConfig {
   @ConfigurationProperties(prefix = "langchain4j.google.ai.gemini")
   public GeminiProperties geminiProperties() {
     return new GeminiProperties();
+  }
+
+  @Bean
+  @ConfigurationProperties(prefix = "langchain4j.open-ai")
+  public OpenAiProperties openAiProperties() {
+    return new OpenAiProperties();
   }
 
 //  @Bean
@@ -46,7 +52,18 @@ public class LangChainConfig {
   }
 
   @Bean
-  @Primary
+  @ConditionalOnProperty(name = "app.llm.provider", havingValue = "openai", matchIfMissing = true)
+  public ChatModel openAiChatModel(OpenAiProperties properties) {
+    return OpenAiChatModel.builder()
+        .apiKey(properties.getApiKey())
+        .modelName(properties.getModelName())
+        .temperature(0.0)
+        .timeout(Duration.ofSeconds(30))
+        .build();
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "app.llm.provider", havingValue = "gemini")
   public ChatModel geminiChatModel(GeminiProperties properties) {
     return GoogleAiGeminiChatModel.builder()
         .apiKey(properties.getApiKey())
@@ -82,14 +99,8 @@ public class LangChainConfig {
   }
 
   @Bean
-  public ChatMemory chatMemory(GeminiProperties properties) {
-    return TokenWindowChatMemory.withMaxTokens(
-        2000,
-        GoogleAiGeminiTokenCountEstimator.builder()
-            .apiKey(properties.getApiKey())
-            .modelName(properties.getModelName())
-            .build()
-    );
+  public ChatMemory chatMemory() {
+    return MessageWindowChatMemory.withMaxMessages(20);
   }
 
   @Bean
@@ -109,6 +120,13 @@ public class LangChainConfig {
   @Getter
   @Setter
   public static class GeminiProperties {
+    private String apiKey;
+    private String modelName;
+  }
+
+  @Getter
+  @Setter
+  public static class OpenAiProperties {
     private String apiKey;
     private String modelName;
   }
