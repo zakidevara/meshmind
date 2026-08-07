@@ -1,11 +1,15 @@
 package com.devara.ai.meshmind.config;
 
-import com.devara.ai.meshmind.CustomerSupportAssistant;
 import com.devara.ai.meshmind.OnCallAssistant;
+import com.devara.ai.meshmind.evaluation.LoggingContentRetriever;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
+import dev.langchain4j.model.googleai.GoogleAiGeminiTokenCountEstimator;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
@@ -13,9 +17,12 @@ import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.time.Duration;
 
@@ -28,19 +35,24 @@ public class LangChainConfig {
     return new GeminiProperties();
   }
 
-  @Bean
-  public ChatModel ollamaChatModel(GeminiProperties properties) {
-//    return GoogleAiGeminiChatModel.builder()
-//        .apiKey(properties.getApiKey())
-//        .modelName(properties.getModelName())
-//        .temperature(0.0)
-//        .timeout(Duration.ofSeconds(30))
-//        .build();
+//  @Bean
+  public ChatModel ollamaChatModel() {
     return OllamaChatModel.builder()
         .baseUrl("http://localhost:11434")
         .modelName("llama3.1")
         .temperature(0.0)
         .timeout(Duration.ofMinutes(5))
+        .build();
+  }
+
+  @Bean
+  @Primary
+  public ChatModel geminiChatModel(GeminiProperties properties) {
+    return GoogleAiGeminiChatModel.builder()
+        .apiKey(properties.getApiKey())
+        .modelName(properties.getModelName())
+        .temperature(0.0)
+        .timeout(Duration.ofSeconds(30))
         .build();
   }
 
@@ -54,32 +66,37 @@ public class LangChainConfig {
   }
 
   @Bean
-  public EmbeddingStore embeddingStore() {
+  public EmbeddingStore<TextSegment> embeddingStore() {
     return new InMemoryEmbeddingStore<>(); // change this to dedicated embedding store like lanceDB or pgvector
   }
 
   @Bean
-  public ContentRetriever contentRetriever(EmbeddingStore store, EmbeddingModel model) {
-    return EmbeddingStoreContentRetriever.builder()
+  public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> store, EmbeddingModel model) {
+    ContentRetriever delegate = EmbeddingStoreContentRetriever.builder()
         .embeddingStore(store)
         .embeddingModel(model)
-        .maxResults(3) // fetch top 3 relevant chunks
-        .minScore(0.7) // only consider chunks with 70% relevancy
+        .maxResults(3)
+        .minScore(0.7)
         .build();
+    return new LoggingContentRetriever(delegate);
   }
 
   @Bean
-  public OnCallAssistant wikiAssistant(ChatModel chatModel, ContentRetriever contentRetriever) {
+  public ChatMemory chatMemory(GeminiProperties properties) {
+    return TokenWindowChatMemory.withMaxTokens(
+        2000,
+        GoogleAiGeminiTokenCountEstimator.builder()
+            .apiKey(properties.getApiKey())
+            .modelName(properties.getModelName())
+            .build()
+    );
+  }
+
+  @Bean
+  public OnCallAssistant onCallAssistant(ChatModel chatModel, ContentRetriever contentRetriever, ChatMemory chatMemory) {
     return AiServices.builder(OnCallAssistant.class)
         .chatModel(chatModel)
-        .contentRetriever(contentRetriever) // enables RAG
-        .build();
-  }
-
-  @Bean
-  public CustomerSupportAssistant customerSupportAssistant(ChatModel chatModel, ContentRetriever contentRetriever) {
-    return AiServices.builder(CustomerSupportAssistant.class)
-        .chatModel(chatModel)
+        .chatMemory(chatMemory)
         .contentRetriever(contentRetriever) // enables RAG
         .build();
   }
@@ -89,13 +106,10 @@ public class LangChainConfig {
     return new ObjectMapper();
   }
 
+  @Getter
+  @Setter
   public static class GeminiProperties {
     private String apiKey;
     private String modelName;
-
-    public String getApiKey() { return apiKey; }
-    public void setApiKey(String apiKey) { this.apiKey = apiKey; }
-    public String getModelName() { return modelName; }
-    public void setModelName(String modelName) { this.modelName = modelName; }
   }
 }

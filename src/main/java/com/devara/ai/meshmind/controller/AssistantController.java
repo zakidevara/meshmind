@@ -1,7 +1,7 @@
 package com.devara.ai.meshmind.controller;
 
-import com.devara.ai.meshmind.CustomerSupportAssistant;
 import com.devara.ai.meshmind.OnCallAssistant;
+import com.devara.ai.meshmind.evaluation.RagEvaluationLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,24 +12,17 @@ import org.springframework.web.bind.annotation.*;
 public class AssistantController {
 
     private final OnCallAssistant onCallAssistant;
-    private final CustomerSupportAssistant customerSupportAssistant;
+    private final RagEvaluationLogger evaluationLogger;
 
-    public AssistantController(OnCallAssistant onCallAssistant, CustomerSupportAssistant customerSupportAssistant) {
+    public AssistantController(OnCallAssistant onCallAssistant, RagEvaluationLogger evaluationLogger) {
         this.onCallAssistant = onCallAssistant;
-        this.customerSupportAssistant = customerSupportAssistant;
+        this.evaluationLogger = evaluationLogger;
     }
 
     @PostMapping("/ask/oncall")
     public String askOncallAssistant(@RequestBody String prompt) {
         String res = onCallAssistant.ask(prompt);
-        log.info("Oncall Assistant response: {}", res);
-        return res;
-    }
-
-    @PostMapping("/ask/customer-support")
-    public String askCustomerSupportAssistant(@RequestBody String prompt) {
-        String res = customerSupportAssistant.ask(prompt);
-        log.info("CS Assistant response: {}", res);
+        evaluationLogger.log(prompt, res);
         return res;
     }
 }

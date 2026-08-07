@@ -5,6 +5,7 @@ import com.devara.ai.meshmind.model.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
@@ -22,11 +23,11 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class SlackDataLoader implements CommandLineRunner {
-  private final EmbeddingStore embeddingStore;
+  private final EmbeddingStore<TextSegment> embeddingStore;
   private final EmbeddingModel embeddingModel;
   private final ObjectMapper objectMapper;
 
-  public SlackDataLoader(EmbeddingStore embeddingStore,
+  public SlackDataLoader(EmbeddingStore<TextSegment> embeddingStore,
                          EmbeddingModel embeddingModel,
                          ObjectMapper objectMapper) {
     this.embeddingStore = embeddingStore;
@@ -74,5 +75,6 @@ public class SlackDataLoader implements CommandLineRunner {
     ingestor.ingest(documents);
 
     log.info("Ingested {} Slack threads into the embedding store.", documents.size());
+    log.info("[DEBUG] {}", documents.stream().map(Document::text).toList());
   }
 }
