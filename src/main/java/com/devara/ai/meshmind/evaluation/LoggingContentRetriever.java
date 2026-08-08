@@ -9,7 +9,7 @@ import java.util.List;
 /** Wraps a {@link ContentRetriever} and captures retrieved content in a ThreadLocal for post-hoc evaluation logging. */
 public class LoggingContentRetriever implements ContentRetriever {
 
-    private static final ThreadLocal<List<Content>> LAST_RETRIEVED = new ThreadLocal<>();
+    private static final InheritableThreadLocal<List<Content>> LAST_RETRIEVED = new InheritableThreadLocal<>(); // each thread have their own copy, preventing race condition & data contamination
 
     private final ContentRetriever delegate;
 
