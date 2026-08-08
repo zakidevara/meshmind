@@ -6,8 +6,10 @@ import com.devara.ai.meshmind.model.SlackMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
+import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.store.embedding.EmbeddingSearchRequest;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,11 @@ public class SlackDataLoader implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
+    if (isAlreadyPopulated()) {
+      log.info("Embedding store already populated; skipping ingestion. Wipe volumes or reset the collection to re-ingest.");
+      return;
+    }
+
     ClassPathResource resource = new ClassPathResource("data/slack_oncall_export.json");
     SlackExport export = objectMapper.readValue(resource.getInputStream(), SlackExport.class);
 
@@ -90,6 +97,20 @@ public class SlackDataLoader implements CommandLineRunner {
     log.info("Ingested {} Slack threads into the embedding store.", documents.size());
     if (log.isDebugEnabled()) {
       documents.forEach(doc -> log.debug("Ingested doc:\n{}\n---", doc.text()));
+    }
+  }
+
+  private boolean isAlreadyPopulated() {
+    try {
+      Embedding probe = embeddingModel.embed("probe").content();
+      var result = embeddingStore.search(EmbeddingSearchRequest.builder()
+          .queryEmbedding(probe)
+          .maxResults(1)
+          .build());
+      return !result.matches().isEmpty();
+    } catch (Exception e) {
+      log.warn("Could not probe embedding store; proceeding with ingestion. Reason: {}", e.getMessage());
+      return false;
     }
   }
 }

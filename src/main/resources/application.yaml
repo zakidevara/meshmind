@@ -11,6 +11,12 @@ app:
     # if true, each Slack thread is summarized by the LLM before embedding
     # (cleaner retrieval on noisy chat data, at the cost of extra LLM calls on startup)
     summarize: true
+  milvus:
+    host: localhost
+    port: 19530
+    collection-name: meshmind_slack
+    # must match the embedding model's output dim (nomic-embed-text = 768)
+    dimension: 768
 langchain4j:
   google:
     ai:

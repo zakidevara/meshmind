@@ -35,3 +35,6 @@ build/
 .env
 
 /eval/.venv
+
+# Docker volumes (Milvus / etcd / minio state)
+/volumes/

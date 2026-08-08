@@ -17,7 +17,7 @@ import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
-import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -84,8 +84,19 @@ public class LangChainConfig {
   }
 
   @Bean
-  public EmbeddingStore<TextSegment> embeddingStore() {
-    return new InMemoryEmbeddingStore<>(); // change this to dedicated embedding store like lanceDB or pgvector
+  @ConfigurationProperties(prefix = "app.milvus")
+  public MilvusProperties milvusProperties() {
+    return new MilvusProperties();
+  }
+
+  @Bean
+  public EmbeddingStore<TextSegment> embeddingStore(MilvusProperties props) {
+    return MilvusEmbeddingStore.builder()
+        .host(props.getHost())
+        .port(props.getPort())
+        .collectionName(props.getCollectionName())
+        .dimension(props.getDimension())
+        .build();
   }
 
   @Bean
@@ -137,5 +148,14 @@ public class LangChainConfig {
   public static class OpenAiProperties {
     private String apiKey;
     private String modelName;
+  }
+
+  @Getter
+  @Setter
+  public static class MilvusProperties {
+    private String host = "localhost";
+    private Integer port = 19530;
+    private String collectionName = "meshmind_slack";
+    private Integer dimension = 768; // must match the embedding model's output dim (nomic-embed-text = 768)
   }
 }

@@ -24,9 +24,16 @@ An AI assistant built with Spring Boot, LangChain4j, and Gemini/Ollama. Designed
 ### Prerequisites
 - Java 21
 - Maven 3.8+
-- Google AI Studio API key (if using Gemini)
+- Docker + Docker Compose (for local Milvus)
+- Google AI Studio API key (if using Gemini) and/or OpenAI API key
 
-1. Configure your environment variables:
+1. Start the vector store (Milvus + etcd + minio):
+```powershell
+docker compose up -d
+```
+Wait ~30–60s for Milvus to become healthy (`docker compose ps` should show all three as healthy). Data persists under `./volumes/`. To wipe: `docker compose down -v` then delete the `volumes/` directory.
+
+2. Configure your environment variables:
 Create a `.env` file in the root directory with the following content:
 ```
 # For OpenAI (default LLM provider)
@@ -42,16 +49,17 @@ app:
     provider: openai   # or: gemini
 ```
 
-2. Build and run the application:
+3. Build and run the application:
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
+On first run, `SlackDataLoader` embeds all threads into Milvus. On subsequent runs it detects existing data and skips ingestion. To force a re-ingest: `docker compose down -v` and `rm -rf volumes/`.
 
-3. Access the application to test using chat interface:
+4. Access the application to test using chat interface:
 Open your web browser and navigate to `http://localhost:63342/meshmind/static/index.html`.
 
-4. Use curl to test the API:
+5. Use curl to test the API:
 
 **Bash / CMD:**
 ```bash
