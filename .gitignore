@@ -41,3 +41,4 @@ build/
 
 # Generated eval artifacts (scored results)
 /eval/output/
+/eval/__pycache__/

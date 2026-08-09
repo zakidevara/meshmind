@@ -88,6 +88,52 @@ class RagEvaluationTest {
         new Case(
             "How do I configure Prometheus federation across three clusters?",
             "There is no internal incident or documentation about Prometheus federation across clusters, so the assistant should reply that it cannot find this information."
+        ),
+
+        // === Generation failure-mode probes ===
+
+        // Parametric hallucination — a topic the LLM knows generically from training,
+        // but our KB only has one specific incident. Faithfulness should stay high only
+        // if the model resists dumping generic JVM tuning advice.
+        new Case(
+            "How do I fix a Java OutOfMemoryError?",
+            "The internal knowledge base only describes a specific OOM incident where the response cache TTL was misconfigured to Duration.ZERO, causing entries to never expire and retained size to grow to 1.8GB. The fix was reverting the TTL and increasing ECS memory from 2GB to 4GB. There is no generic Java OOM guide in the knowledge base; the assistant should describe this specific incident and not offer generic JVM tuning advice."
+        ),
+
+        // Extrapolation — asks for information not present in the source.
+        // A faithful answer should say the timeline is unspecified.
+        new Case(
+            "When will the API Gateway 502 incident be fully resolved?",
+            "The thread does not specify a resolution timeline. It only states the resolution is still pending, that AWS support was escalated, and that the Lambda deployment is being rolled back. Any specific timeline in the answer would be extrapolation beyond the source."
+        ),
+
+        // Contradiction / leading-question probe — the question falsely attributes the OOM
+        // fix to a Lambda rollback (which actually belongs to a different incident).
+        // A faithful answer must reject the false premise.
+        new Case(
+            "Was the ECS OOM fixed by rolling back the Lambda deployment?",
+            "No. The ECS OOM was caused by a response cache TTL set to Duration.ZERO. The fix was reverting the TTL and increasing ECS memory from 2GB to 4GB. The Lambda rollback was the fix for a different (API Gateway 502) incident, not the OOM."
+        ),
+
+        // Query misinterpretation — asks specifically about detection.
+        // A relevant answer must NOT drift into 'how it was fixed'.
+        new Case(
+            "How did we detect the SQS DLQ spike for payments?",
+            "The thread does not describe the initial detection mechanism; it starts with the incident already declared and jumps to sampling messages from the DLQ. There is no explicit mention of a monitor, alert source, or detection tool."
+        ),
+
+        // Incomplete addressing — 4-part compound question.
+        // Relevancy should drop if any of the four parts is skipped.
+        new Case(
+            "For the Redis thundering herd incident: what was the trigger, what was the root cause of the amplification, what was the fix, and what would prevent this pattern from recurring across other services?",
+            "Trigger: Redis restart. Root cause of amplification: all clients fired their cache-miss fallback in the same 200ms window because they had zero jitter on cache reconnect. Fix: added exponential backoff with jitter (0-500ms) to the retry logic and deployed it to all services. Preventing recurrence across other services: standardize the jittered-retry pattern in a shared client library so new services inherit it by default. Note: the recurrence-prevention part is not explicitly described in the thread and would require inference."
+        ),
+
+        // Over-hedging / padding probe — a yes/no answerable question.
+        // A good answer is 2-3 sentences. A wall of text is padding.
+        new Case(
+            "Do we have an incident where a missing IAM permission caused an S3 upload failure?",
+            "Yes. The reporting-task ECS role was missing s3:PutObject on the reports-prod bucket, causing AccessDenied on PDF uploads by the reporting cron. The fix was attaching the correct policy granting s3:PutObject on arn:aws:s3:::reports-prod/*."
         )
     );
 
