@@ -38,3 +38,6 @@ build/
 
 # Docker volumes (Milvus / etcd / minio state)
 /volumes/
+
+# Generated eval artifacts (scored results)
+/eval/output/

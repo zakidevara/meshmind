@@ -87,11 +87,13 @@ curl.exe -X POST "http://localhost:8080/api/ai/ask/oncall" `
 
 ## Evaluating the RAG Pipeline
 
-MeshMind logs every query's retrieved contexts and generated answer to `eval_samples.jsonl` in the project root. Use the RAGAS evaluation script in `eval/` to measure pipeline quality.
+MeshMind logs every query's retrieved contexts and generated answer to `eval/input/eval_samples.jsonl`. Use the RAGAS evaluation script in `eval/` to measure pipeline quality.
 
 ### Metrics
-- **Faithfulness** — is the answer grounded in the retrieved context (no hallucination)?
-- **Answer Relevancy** — is the answer actually relevant to the question?
+- **Faithfulness** — is the answer grounded in the retrieved context (no hallucination)? *(no ground truth needed)*
+- **Answer Relevancy** — is the answer actually relevant to the question? *(no ground truth needed)*
+- **Context Precision** — are the *relevant* retrieved chunks ranked ahead of the irrelevant ones? *(needs ground truth)*
+- **Context Recall** — did retrieval bring back all the information needed to answer? *(needs ground truth)*
 
 ### Setup
 
@@ -110,7 +112,16 @@ pip install -r eval\requirements.txt
 
 ### Running the evaluation
 
-1. Start the app and make several queries to populate `eval_samples.jsonl`.
+1. Populate `eval\input\eval_samples.jsonl`. Two options:
+
+   **Option A — Curated test set (recommended):** run `RagEvaluationTest`, which iterates through a fixed set of `(question, ground_truth)` prompts against the on-call assistant and writes them to `eval\input\eval_samples.jsonl`. This is what enables the context-precision and context-recall metrics.
+   ```powershell
+   .\mvnw.cmd test "-Dtest=RagEvaluationTest" "-Drun.eval.test=true"
+   ```
+   Requires Milvus + Ollama running and the app's LLM provider configured. Overwrites `eval\input\eval_samples.jsonl` on each run.
+
+   **Option B — Ad-hoc queries:** start the app normally and hit `/api/ai/ask/oncall`. Each request appends to `eval\input\eval_samples.jsonl` (without ground truth, so only faithfulness + answer_relevancy will be scored).
+
 
 2. Choose a judge LLM by setting `EVAL_JUDGE` — `gemini` (default) or `openai`.
 
@@ -128,36 +139,49 @@ $env:OPENAI_API_KEY = "your_openai_api_key_here"
 python eval\evaluate.py
 ```
 
-The script prints aggregate scores to the console and saves per-sample results to `eval\eval_results.csv`.
+The script prints aggregate scores to the console and saves per-sample results to `eval\output\eval_results.csv`.
 
 ### Sample results
 
-Aggregate scores from a three-sample run against the on-call assistant:
+Aggregate scores from a 12-sample run against the on-call assistant (via `RagEvaluationTest` with hand-written ground truths):
 
 ```
 === Evaluation Results ===
-{'faithfulness': 0.4644, 'answer_relevancy': 0.5689}
+{'faithfulness': 0.8395, 'answer_relevancy': 0.6942,
+ 'context_precision': 0.7778, 'context_recall': 0.9167}
 ```
 
-Per-sample breakdown from `eval\eval_results.csv`:
+Per-sample breakdown from `eval\output\eval_results_v3.csv`:
 
-| # | Question | Faithfulness | Answer Relevancy |
-|---|---|---:|---:|
-| 1 | *The checkout endpoint is returning 502s. Is there any similar issue previously? what is the root cause and how to resolve it?* | 0.615 | 0.817 |
-| 2 | *There is a sudden surge of traffic to our DB causing CPU utilization to be high. What could be the reason?* | 0.000 | 0.000 |
-| 3 | *There is a sudden surge of traffic to our DB causing 100% CPU. What could be the reason?* | 0.778 | 0.889 |
+| # | Question | Faith. | Ans. Rel. | Ctx. Prec. | Ctx. Rec. |
+|---|---|---:|---:|---:|---:|
+| 1 | *How did we fix the ECS task crash-looping with OOMKilled?* | 1.000 | 0.782 | 1.000 | 1.000 |
+| 2 | *Our Spring Boot service keeps getting killed by out-of-memory errors. Any recent similar incident and how was it resolved?* | 1.000 | 0.595 | 1.000 | 1.000 |
+| 3 | *There is a spike in SQS DLQ for payments. Have we seen this before and what caused it?* | 0.889 | 0.876 | 1.000 | 1.000 |
+| 4 | *The checkout endpoint is returning 502s. Is there any similar issue previously? What is the root cause and how to resolve it?* | 1.000 | **0.000** | 1.000 | 1.000 |
+| 5 | *Users service is throwing HikariCP connection pool timeout exceptions. What should I check?* | 0.778 | 0.928 | 1.000 | 1.000 |
+| 6 | *There is a sudden surge of traffic to our DB causing 100% CPU. What could be the reason?* | 0.818 | 0.926 | **0.000** | **0.000** |
+| 7 | *Why is our /api/reports endpoint returning 504 Gateway Timeout?* | 0.875 | 0.866 | **0.333** | 1.000 |
+| 8 | *The reporting cron is getting AccessDenied when uploading PDFs to S3. What went wrong?* | 1.000 | 0.777 | 1.000 | 1.000 |
+| 9 | *Internal service-to-service calls started failing with certificate expired. How was this fixed last time?* | 0.714 | 0.826 | 1.000 | 1.000 |
+| 10 | *Post-deploy NullPointerException on the checkout confirmation page. What was the cause and how was it fixed?* | 1.000 | 0.839 | 1.000 | 1.000 |
+| 11 | *The recommendations service is experiencing multi-second JVM GC pauses. What could cause it?* | 1.000 | 0.915 | 1.000 | 1.000 |
+| 12 | *How do I configure Prometheus federation across three clusters?* (not in KB) | 0.000 | 0.000 | 0.000 | 1.000 |
 
 **Reading the results:**
-- **Sample 1** — retrieval correctly pulled the API Gateway 502 thread (Lambda timeout root cause). Relevancy is high (0.82) because the answer directly addresses the question. Faithfulness at 0.62 reflects a few summarization claims that go slightly beyond what the retrieved messages literally state.
-- **Sample 2** — both metrics are **zero** because the assistant returned the fallback *"I cannot find this information in the internal knowledge base."* Retrieval didn't clear the `minScore=0.7` threshold on any chunk for this phrasing, so the LLM had no context to work with.
-- **Sample 3** — the **exact same intent** as sample 2, but reworded ("100% CPU" instead of "CPU utilization to be high") crosses the retrieval threshold and pulls in the Redis thundering-herd thread. Scores jump to 0.78 / 0.89.
 
-**The signal in samples 2 vs. 3** — a small phrasing change flips the pipeline between fallback and a strong answer. This is a retrieval-tuning signal: consider lowering `minScore`, adding query rewriting, or using hybrid (BM25 + vector) search so keyword overlap ("CPU") isn't the deciding factor.
+- **Faithfulness averages 0.84** — the assistant almost never hallucinates beyond the retrieved summaries. Sample 9 (0.71) is the weakest; the answer adds "proactive approach" framing that isn't literally in the source.
+- **Sample 4 (Ans. Rel. = 0.00)** is the most surprising failure. The answer is *correct and topical* (mentions Lambda timeout, rollback, AWS escalation), but the RAGAS metric reverse-generates candidate questions from the answer and compares similarity to the original. The original question is a long, three-part compound phrasing which the reverse-generated questions never match closely enough. **Metric-artifact, not a real quality issue.**
+- **Sample 6 (Ctx. Prec./Recall = 0.00)** is a *real* retrieval failure. The question "sudden surge of traffic to our DB causing 100% CPU" pulls back **DynamoDB throttling, Kafka lag, SQS DLQ** — semantically adjacent but not the ground-truth-matching **Redis thundering-herd** thread. The LLM then confidently answers using the wrong incident. This is a signal to add hybrid search or query rewriting.
+- **Sample 7 (Ctx. Prec. = 0.33)** shows a ranking issue — the correct nginx thread was retrieved, but was ranked *third* behind two irrelevant API Gateway / intermittent-500s threads. A reranker would fix this.
+- **Sample 12 (fallback)** correctly refuses to answer since Prometheus federation isn't in the KB. Faithfulness/relevancy are 0 (fallback text doesn't cite context and doesn't semantically match the question), but **Context Recall = 1.0** because there's nothing to recall — the "ideal" answer is "no info", which is what happened.
+
+**What to fix first:** samples 6 and 7 point at the same root cause — pure vector similarity confuses "DB CPU spike" concepts across incidents. Adding BM25 hybrid search or a cross-encoder reranker would likely lift `context_precision` significantly.
 
 ### Overriding paths and models
 
 ```powershell
-$env:EVAL_INPUT  = "path\to\eval_samples.jsonl"
+$env:EVAL_INPUT  = "eval\input\eval_samples.jsonl"
 $env:EVAL_OUTPUT = "path\to\output.csv"
 
 # Gemini model overrides
