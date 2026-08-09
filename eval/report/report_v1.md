@@ -131,6 +131,6 @@ Two metric behaviors observed here are worth flagging, since they persist in lat
 
 - **v2** — introduced `SlackThreadSummarizer`. Every Slack thread is passed through the LLM at ingest time and rewritten into a structured `Issue / Root cause / Investigation / Resolution / Tags` block before embedding. On the same 3 questions, this delivered **F: 0.464 → 0.685 (+0.22)** and, more importantly, **rescued sample 2 from the fallback trap** (F: 0 → 0.5, AR: 0 → 0.77). See `report_v2.md`.
 - **v3** — expanded to 12 samples, added ground truth, enabled Context Precision + Context Recall. Immediately exposed a *different* failure class — silent wrong-thread retrieval on ambiguous queries — that F+AR couldn't see. See `report_v3.md`.
-- **v5** — added 6 generation-failure probes (parametric hallucination, extrapolation, contradiction, etc.) to stress-test the LLM layer. See `report_v5_20260809_170823.md`.
+- **v4** — added 6 generation-failure probes (parametric hallucination, extrapolation, contradiction, etc.) to stress-test the LLM layer. See `report_v4_20260809_170823.md`.
 
 v1's role in the story is as **the baseline that identified the ingest layer as the highest-leverage fix**. The single failing case (sample 2) was worth more than either of the passing cases, because it pointed at a concrete, testable change (summarization) that improved every subsequent run.

@@ -106,6 +106,6 @@ This sample already worked well in v1 (F=0.78, AR=0.89). In v2, Answer Relevancy
 The recommendations above shaped the subsequent runs:
 
 - **v3** — added a `ground_truth` field to every sample and expanded to 12 questions. Introduced Context Precision + Context Recall metrics, which surfaced the *retrieval-ranking* failure mode (Redis herd vs. DynamoDB hot partition) that faithfulness alone couldn't diagnose.
-- **v5** — added six generation-failure probes (parametric hallucination, extrapolation, contradiction, query misinterpretation, incomplete addressing, padding) to stress-test the LLM layer specifically. Confirmed that the assistant is vulnerable to parametric-knowledge leakage on well-known topics (e.g., generic "Java OOM" questions) but robust to leading questions and honest about missing information.
+- **v4** — added six generation-failure probes (parametric hallucination, extrapolation, contradiction, query misinterpretation, incomplete addressing, padding) to stress-test the LLM layer specifically. Confirmed that the assistant is vulnerable to parametric-knowledge leakage on well-known topics (e.g., generic "Java OOM" questions) but robust to leading questions and honest about missing information.
 
 The v2 → v3 transition was the moment the eval suite matured from "does the pipeline produce a plausible answer?" into "*where* does the pipeline break?".

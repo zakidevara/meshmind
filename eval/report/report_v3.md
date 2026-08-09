@@ -184,6 +184,5 @@ Behaves correctly. See §4.3 for why the metrics look catastrophic.
 
 The v3 findings shaped subsequent runs:
 
-- **v5** (18 samples) added six **generation-failure probes** to stress-test the LLM layer: parametric hallucination, extrapolation, contradiction, query misinterpretation, incomplete addressing, and padding. These were designed to complement v3's retrieval-quality focus with generation-quality probes. v5 confirmed that the assistant is vulnerable to parametric-knowledge leakage on well-known topics ("How do I fix a Java OOM?") but robust to leading questions and honest about missing information.
-- **v4 was skipped** (dataset iteration only, no run committed).
+- **v4** (18 samples) added six **generation-failure probes** to stress-test the LLM layer: parametric hallucination, extrapolation, contradiction, query misinterpretation, incomplete addressing, and padding. These were designed to complement v3's retrieval-quality focus with generation-quality probes. v4 confirmed that the assistant is vulnerable to parametric-knowledge leakage on well-known topics ("How do I fix a Java OOM?") but robust to leading questions and honest about missing information.
 - The retrieval-ranking findings from samples 6 and 7 remain the top open backlog item across all runs.

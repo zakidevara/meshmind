@@ -150,13 +150,13 @@ Aggregate scores across runs. Full per-sample analysis and findings live in `eva
 | v1 — baseline (raw chat ingest) | 3 | 0.464 | 0.569 | *n/a* | *n/a* | [report_v1.md](eval/report/report_v1.md) |
 | v2 — added LLM summarization | 3 | 0.685 | 0.571 | *n/a* | *n/a* | [report_v2.md](eval/report/report_v2.md) |
 | v3 — added ground truth + expanded to 12 samples | 12 | 0.840 | 0.694 | 0.778 | 0.917 | [report_v3.md](eval/report/report_v3.md) |
-| v5 — added 6 generation-failure probes | 18 | 0.807 | 0.748 | 0.731 | 0.857 | [report_v5.md](eval/report/report_v5_20260809_170823.md) |
+| v4 — added 6 generation-failure probes | 18 | 0.807 | 0.748 | 0.731 | 0.857 | [report_v4.md](eval/report/report_v4_20260809_170823.md) |
 
 **Highlights:**
 
 - **v1 → v2** (summarization): +22 pts Faithfulness. Rescued a previously-broken retrieval case (verbose "DB CPU high" query) from the fallback trap.
 - **v3** (ground truth added): Context Precision + Recall metrics exposed a class of *silent* retrieval failures — the LLM confidently answering from a wrong-but-plausible chunk — that F+AR couldn't detect.
-- **v5** (probe cases added): confirmed real parametric-knowledge leakage on well-known topics ("How do I fix a Java OOM?") but robust behavior on leading questions and out-of-KB queries.
+- **v4** (probe cases added): confirmed real parametric-knowledge leakage on well-known topics ("How do I fix a Java OOM?") but robust behavior on leading questions and out-of-KB queries.
 - **Top open issue across all runs:** retrieval ranking on ambiguous queries. Pure vector similarity confuses semantically-adjacent incidents. Hybrid search (BM25 + vector) or a cross-encoder reranker are the next fix candidates.
 
 Each report follows the same structure: executive summary → what changed vs. prior run → per-sample table → group analysis → findings → what came next.
