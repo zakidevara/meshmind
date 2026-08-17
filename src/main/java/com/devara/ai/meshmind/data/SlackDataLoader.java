@@ -3,6 +3,7 @@ package com.devara.ai.meshmind.data;
 import com.devara.ai.meshmind.SlackThreadSummarizer;
 import com.devara.ai.meshmind.model.SlackExport;
 import com.devara.ai.meshmind.model.SlackMessage;
+import com.devara.ai.meshmind.rag.BM25ContentRetriever;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.Metadata;
@@ -18,10 +19,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,27 +35,31 @@ public class SlackDataLoader implements CommandLineRunner {
   private final EmbeddingModel embeddingModel;
   private final ObjectMapper objectMapper;
   private final SlackThreadSummarizer summarizer;
+  private final SummaryCache summaryCache;
+  private final BM25ContentRetriever bm25ContentRetriever;
   private final boolean summarizeEnabled;
+  private final Path summaryCachePath;
 
   public SlackDataLoader(EmbeddingStore<TextSegment> embeddingStore,
                          EmbeddingModel embeddingModel,
                          ObjectMapper objectMapper,
                          SlackThreadSummarizer summarizer,
-                         @Value("${app.ingest.summarize:true}") boolean summarizeEnabled) {
+                         SummaryCache summaryCache,
+                         BM25ContentRetriever bm25ContentRetriever,
+                         @Value("${app.ingest.summarize:true}") boolean summarizeEnabled,
+                         @Value("${app.ingest.summary-cache-path:data/slack_summaries.json}") String summaryCachePath) {
     this.embeddingStore = embeddingStore;
     this.embeddingModel = embeddingModel;
     this.objectMapper = objectMapper;
     this.summarizer = summarizer;
+    this.summaryCache = summaryCache;
+    this.bm25ContentRetriever = bm25ContentRetriever;
     this.summarizeEnabled = summarizeEnabled;
+    this.summaryCachePath = Path.of(summaryCachePath);
   }
 
   @Override
   public void run(String... args) throws Exception {
-    if (isAlreadyPopulated()) {
-      log.info("Embedding store already populated; skipping ingestion. Wipe volumes or reset the collection to re-ingest.");
-      return;
-    }
-
     ClassPathResource resource = new ClassPathResource("data/slack_oncall_export.json");
     SlackExport export = objectMapper.readValue(resource.getInputStream(), SlackExport.class);
 
@@ -61,43 +69,77 @@ public class SlackDataLoader implements CommandLineRunner {
 
     log.info("Loaded {} Slack threads. Summarization enabled: {}", threadsByTimestamp.size(), summarizeEnabled);
 
+    // 1. Produce summaries — from cache if available, otherwise via LLM.
+    Map<String, String> summariesByTs = resolveSummaries(threadsByTimestamp);
+
+    // 2. Build the documents (each thread = 1 doc) so both stores index the same content.
     List<Document> documents = new ArrayList<>();
-    int index = 0;
     for (Map.Entry<String, List<SlackMessage>> entry : threadsByTimestamp.entrySet()) {
-      index++;
+      String threadTs = entry.getKey();
       List<SlackMessage> threadMessages = entry.getValue();
       threadMessages.sort(Comparator.comparing(SlackMessage::ts));
-
       String rawThread = threadMessages.stream()
           .map(m -> m.user() + ": " + m.text())
           .collect(Collectors.joining("\n"));
-
-      String content;
-      if (summarizeEnabled) {
-        log.info("Summarizing thread {}/{} ({})", index, threadsByTimestamp.size(), entry.getKey());
-        content = summarizer.summarize(rawThread);
-      } else {
-        content = rawThread;
-      }
-
+      String content = summariesByTs.get(threadTs);
       Metadata metadata = Metadata.from("source", "slack_oncall")
-          .put("thread_ts", entry.getKey())
+          .put("thread_ts", threadTs)
           .put("raw_thread", rawThread);
-
       documents.add(Document.from(content, metadata));
     }
 
-    EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-        .embeddingModel(embeddingModel)
-        .embeddingStore(embeddingStore)
-        .build();
+    // 3. Always (re)build the BM25 index — it is in-memory and empty on every restart.
+    List<TextSegment> segments = documents.stream()
+        .map(doc -> TextSegment.from(doc.text(), doc.metadata()))
+        .toList();
+    bm25ContentRetriever.index(segments);
 
-    ingestor.ingest(documents);
+    // 4. Populate Milvus only if empty (persistent across restarts).
+    if (isAlreadyPopulated()) {
+      log.info("Milvus already populated; skipping vector ingestion. Wipe volumes/collection to re-ingest.");
+    } else {
+      EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
+          .embeddingModel(embeddingModel)
+          .embeddingStore(embeddingStore)
+          .build();
+      ingestor.ingest(documents);
+      log.info("Ingested {} Slack threads into Milvus.", documents.size());
+    }
 
-    log.info("Ingested {} Slack threads into the embedding store.", documents.size());
     if (log.isDebugEnabled()) {
       documents.forEach(doc -> log.debug("Ingested doc:\n{}\n---", doc.text()));
     }
+  }
+
+  private Map<String, String> resolveSummaries(Map<String, List<SlackMessage>> threadsByTimestamp) {
+    if (!summarizeEnabled) {
+      // Fall back to raw chat when summarization is disabled — same content in both stores.
+      Map<String, String> raw = new LinkedHashMap<>();
+      for (var entry : threadsByTimestamp.entrySet()) {
+        List<SlackMessage> msgs = new ArrayList<>(entry.getValue());
+        msgs.sort(Comparator.comparing(SlackMessage::ts));
+        raw.put(entry.getKey(), msgs.stream().map(m -> m.user() + ": " + m.text()).collect(Collectors.joining("\n")));
+      }
+      return raw;
+    }
+
+    Optional<Map<String, String>> cached = summaryCache.load(summaryCachePath);
+    if (cached.isPresent() && cached.get().keySet().containsAll(threadsByTimestamp.keySet())) {
+      return cached.get();
+    }
+
+    Map<String, String> summaries = new LinkedHashMap<>();
+    int i = 0, total = threadsByTimestamp.size();
+    for (var entry : threadsByTimestamp.entrySet()) {
+      i++;
+      List<SlackMessage> msgs = new ArrayList<>(entry.getValue());
+      msgs.sort(Comparator.comparing(SlackMessage::ts));
+      String rawThread = msgs.stream().map(m -> m.user() + ": " + m.text()).collect(Collectors.joining("\n"));
+      log.info("Summarizing thread {}/{} ({})", i, total, entry.getKey());
+      summaries.put(entry.getKey(), summarizer.summarize(rawThread));
+    }
+    summaryCache.save(summaryCachePath, summaries);
+    return summaries;
   }
 
   private boolean isAlreadyPopulated() {

@@ -34,11 +34,12 @@ build/
 
 .env
 
-/eval/.venv
 
 # Docker volumes (Milvus / etcd / minio state)
 /volumes/
 
-# Generated eval artifacts (scored results)
-/eval/output/
 /eval/__pycache__/
+/eval/.venv
+
+# Generated LLM summary cache
+/data/

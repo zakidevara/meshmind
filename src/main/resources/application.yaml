@@ -11,6 +11,8 @@ app:
     # if true, each Slack thread is summarized by the LLM before embedding
     # (cleaner retrieval on noisy chat data, at the cost of extra LLM calls on startup)
     summarize: true
+    # per-thread summary cache; regenerated automatically if missing or incomplete
+    summary-cache-path: data/slack_summaries.json
   milvus:
     host: localhost
     port: 19530
@@ -29,3 +31,5 @@ langchain4j:
 logging:
   level:
     com.devara.ai.meshmind.data.SlackDataLoader: DEBUG
+    # per-retriever + fusion diagnostics (vector, bm25, and fused RRF output)
+    com.devara.ai.meshmind.rag: DEBUG

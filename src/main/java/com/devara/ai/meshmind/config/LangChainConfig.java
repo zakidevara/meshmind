@@ -2,7 +2,9 @@ package com.devara.ai.meshmind.config;
 
 import com.devara.ai.meshmind.OnCallAssistant;
 import com.devara.ai.meshmind.SlackThreadSummarizer;
-import com.devara.ai.meshmind.evaluation.LoggingContentRetriever;
+import com.devara.ai.meshmind.rag.BM25ContentRetriever;
+import com.devara.ai.meshmind.rag.DebugLoggingContentRetriever;
+import com.devara.ai.meshmind.rag.LoggingContentAggregator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
@@ -13,8 +15,12 @@ import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.model.ollama.OllamaEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.rag.DefaultRetrievalAugmentor;
+import dev.langchain4j.rag.RetrievalAugmentor;
+import dev.langchain4j.rag.content.aggregator.DefaultContentAggregator;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.rag.query.router.DefaultQueryRouter;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.milvus.MilvusEmbeddingStore;
@@ -100,14 +106,29 @@ public class LangChainConfig {
   }
 
   @Bean
-  public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> store, EmbeddingModel model) {
+  public ContentRetriever vectorContentRetriever(EmbeddingStore<TextSegment> store, EmbeddingModel model) {
     ContentRetriever delegate = EmbeddingStoreContentRetriever.builder()
         .embeddingStore(store)
         .embeddingModel(model)
         .maxResults(3)
         .minScore(0.7)
         .build();
-    return new LoggingContentRetriever(delegate);
+    return new DebugLoggingContentRetriever("vector", delegate);
+  }
+
+  @Bean
+  public BM25ContentRetriever bm25ContentRetriever() {
+    return new BM25ContentRetriever(5);
+  }
+
+  @Bean
+  public RetrievalAugmentor retrievalAugmentor(
+      ContentRetriever vectorContentRetriever,
+      BM25ContentRetriever bm25ContentRetriever) {
+    return DefaultRetrievalAugmentor.builder()
+        .queryRouter(new DefaultQueryRouter(vectorContentRetriever, bm25ContentRetriever))
+        .contentAggregator(new LoggingContentAggregator(new DefaultContentAggregator()))
+        .build();
   }
 
   @Bean
@@ -116,11 +137,11 @@ public class LangChainConfig {
   }
 
   @Bean
-  public OnCallAssistant onCallAssistant(ChatModel chatModel, ContentRetriever contentRetriever, ChatMemory chatMemory) {
+  public OnCallAssistant onCallAssistant(ChatModel chatModel, RetrievalAugmentor retrievalAugmentor, ChatMemory chatMemory) {
     return AiServices.builder(OnCallAssistant.class)
         .chatModel(chatModel)
         .chatMemory(chatMemory)
-        .contentRetriever(contentRetriever) // enables RAG
+        .retrievalAugmentor(retrievalAugmentor) // hybrid vector + BM25 with RRF fusion
         .build();
   }
 

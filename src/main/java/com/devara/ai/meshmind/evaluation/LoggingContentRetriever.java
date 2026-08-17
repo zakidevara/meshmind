@@ -31,6 +31,11 @@ public class LoggingContentRetriever implements ContentRetriever {
         return LAST_RETRIEVED.get();
     }
 
+    /** Allows external components (e.g. LoggingContentAggregator) to publish the fused content into the same ThreadLocal. */
+    public static void setLastRetrieved(List<Content> contents) {
+        LAST_RETRIEVED.set(contents);
+    }
+
     /** Removes the stored content from the current thread, preventing memory leaks in thread pools. */
     public static void clear() {
         LAST_RETRIEVED.remove();
